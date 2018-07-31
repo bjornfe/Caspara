@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Caspara.Observations;
+using System;
 
 namespace Caspara.TestConsole
 {
@@ -12,6 +13,11 @@ namespace Caspara.TestConsole
             Caspara.Start();
             Console.WriteLine("Application Started");
             Console.ReadLine();
+
+            
+
+            
+
 
             Caspara.Stop();
             Console.WriteLine("Application Ended");

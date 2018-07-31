@@ -1,9 +1,11 @@
 ﻿
 
+using Caspara.Values;
+
 namespace Caspara.Observations
 {
     public interface IObservation : IObject
     {
-        object Value { get; set; }
+        IValue Value { get; set; }
     }
 }

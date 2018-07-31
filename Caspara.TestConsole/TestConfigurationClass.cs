@@ -1,6 +1,8 @@
 ﻿using Caspara.Logging;
+using Caspara.Services;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Caspara.TestConsole
@@ -9,8 +11,9 @@ namespace Caspara.TestConsole
     {
         public void Configure(IApplication app)
         {
-            app.InjectorService.Register<TestThreadService>().AsIncludedInterfaces().AsSingleton();
+            //app.InjectorService.Register<TestThreadService>().AsIncludedInterfaces().AsSingleton();
             app.InjectorService.Register<TestConsoleLogger>().As<IConsoleLogger>().AsSingleton();
+            app.InjectorService.RegisterAssemblyTypes<IService>(Assembly.GetAssembly(GetType()));
         }
 
         public void Start(IApplication app)
