@@ -1,5 +1,6 @@
 ﻿using Caspara.DependencyInjection;
 using Caspara.Extensions;
+using Caspara.Logging;
 using Caspara.Repositories;
 using Caspara.Serializing;
 using Caspara.Services;
@@ -13,7 +14,7 @@ namespace Caspara
 
         public void Load(string Path = null)
         {
-           
+            InjectorService.Register<ConsoleTextLogger>().As<IConsoleLogger>().AsSingleton();
             InjectorService.Register<ExtensionManager>().As<IExtensionManager>().AsSingleton();
             InjectorService.Register<ServiceManager>().As<IServiceManager>().AsSingleton();
             InjectorService.Register<Serializer>().As<ISerializer>();

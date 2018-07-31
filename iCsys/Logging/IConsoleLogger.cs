@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Caspara.Logging
 {
-    public interface ILogger
+    public interface IConsoleLogger : ILogger
     {
+        void LogText(String Text);
     }
 }

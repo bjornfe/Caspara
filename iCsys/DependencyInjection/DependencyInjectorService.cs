@@ -134,5 +134,13 @@ namespace Caspara.DependencyInjection
             }
 
         }
+
+        public int GetRegistrationCount()
+        {
+            lock (_lockObject)
+            {
+                return _services.Count();
+            }
+        }
     }
 }

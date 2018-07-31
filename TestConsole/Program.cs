@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TestConsole
+namespace Caspara.TestConsole
 {
     class Program
     {

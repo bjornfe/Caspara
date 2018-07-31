@@ -6,7 +6,8 @@ using System.Text;
 namespace Caspara.DependencyInjection
 {
     public interface IDependencyInjectorService
-    { 
+    {
+        int GetRegistrationCount();
         IDependencyInjectorEntry Register<T>();
         IDependencyInjectorEntry Register(Type t);
         IDependencyInjectorEntry Register(object obj);

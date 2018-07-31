@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caspara", "iCsys\Caspara.csproj", "{1DDBA530-4C42-4D9C-A79A-9CE59A6BA424}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsole", "TestConsole\TestConsole.csproj", "{F4201A46-A7FF-485E-B395-C032166D57D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caspara.TestConsole", "TestConsole\Caspara.TestConsole.csproj", "{F4201A46-A7FF-485E-B395-C032166D57D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
