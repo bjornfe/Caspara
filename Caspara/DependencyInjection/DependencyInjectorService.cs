@@ -40,13 +40,15 @@ namespace Caspara.DependencyInjection
             }
         }
 
-        public IDependencyInjectorEntry RegisterOrReplace<T>(object Key = null)
+        public IDependencyInjectorEntry Replace<T, U>()
         {
             lock (_lockObject)
             {
-                if (_services.Any(s => s.IsRegisteredAs(typeof(T)) && (Key == null || s.HasKey(Key))))
+                if (_services.Any(s => s.ResolveAsType == typeof(T)))
                 {
-                    return _services.Where(s => s.IsRegisteredAs(typeof(T)) && (Key == null || s.HasKey(Key))).First();
+                    var entry = _services.Where(s => s.ResolveAsType == typeof(T)).First();
+                    entry.ReplaceResolveType(typeof(U));
+                    return entry;
                 }
                 else
                     return Register<T>();
@@ -141,6 +143,12 @@ namespace Caspara.DependencyInjection
             {
                 return _services.Count();
             }
+        }
+
+
+        public bool IsRegistered<T>()
+        {
+            return (_services.Count > 0 && _services.Any(s => s.ResolveAsType == typeof(T)));
         }
     }
 }

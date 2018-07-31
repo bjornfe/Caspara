@@ -8,25 +8,39 @@ namespace Caspara.DependencyInjection
     public class DependencyInjectionEntry : IDependencyInjectorEntry
     {
         private List<Type> _registeredAs = new List<Type>();
-        private Type ResolveAs;
         private object Instance;
         private DependencyInjectorEntryType resultType = DependencyInjectorEntryType.RESOLVABLE;
         private Lazy<object> Lazy;
         private Func<object> Function;
         private List<object> Keys = new List<object>();
         private IDependencyInjectorService InjectorService;
-        
+
+        public Type ResolveAsType { get; private set; }
+
+        public void ReplaceResolveType(Type t)
+        {
+            bool replaceInRegister = false;
+            if (_registeredAs.Contains(ResolveAsType))
+            {
+                _registeredAs.Remove(ResolveAsType);
+                replaceInRegister = true;
+            }
+            ResolveAsType = t;
+            if (replaceInRegister)
+                As(ResolveAsType);
+            
+        }
 
         public DependencyInjectionEntry(IDependencyInjectorService InjectorService, Type ResolveAs)
         {
             this.InjectorService = InjectorService;
-            this.ResolveAs = ResolveAs;
+            this.ResolveAsType = ResolveAs;
             As(ResolveAs);
         }
 
         public IDependencyInjectorEntry AsIncludedInterfaces()
         {
-            foreach (var i in ResolveAs.GetInterfaces())
+            foreach (var i in ResolveAsType.GetInterfaces())
                 As(i);
 
             return this;
@@ -34,7 +48,7 @@ namespace Caspara.DependencyInjection
 
         public IDependencyInjectorEntry AsSelf()
         {
-            _registeredAs.Add(ResolveAs);
+            _registeredAs.Add(ResolveAsType);
             return this;
         }
 
@@ -131,6 +145,9 @@ namespace Caspara.DependencyInjection
             return resultType == type;
         }
         private object _lockObject = new object();
+
+        
+
         public object GetEntry(Type t)
         {
             try
@@ -178,13 +195,13 @@ namespace Caspara.DependencyInjection
 
         private object CreateInstance()
         {
-            var constructors = ResolveAs.GetConstructors();
+            var constructors = ResolveAsType.GetConstructors();
             var constructor = constructors[0];
 
             var parameters = constructor.GetParameters();
             if(parameters.Length == 0)
             {
-                return Activator.CreateInstance(ResolveAs);
+                return Activator.CreateInstance(ResolveAsType);
             }
             else
             {
@@ -196,7 +213,7 @@ namespace Caspara.DependencyInjection
                     else
                         arguments[i] = InjectorService.Resolve(parameters[i].ParameterType);
                 }
-                return Activator.CreateInstance(ResolveAs, arguments);
+                return Activator.CreateInstance(ResolveAsType, arguments);
             }
 
 

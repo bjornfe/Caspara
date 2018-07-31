@@ -11,7 +11,7 @@ namespace Caspara
     public interface IApplication
     {
         IDependencyInjectorService InjectorService { get; set; }
-        void Load(String Path = null);
+        void Configure(String Path = null);
         void Start();
         void Stop();
         

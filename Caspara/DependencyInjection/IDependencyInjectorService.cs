@@ -11,7 +11,8 @@ namespace Caspara.DependencyInjection
         IDependencyInjectorEntry Register<T>();
         IDependencyInjectorEntry Register(Type t);
         IDependencyInjectorEntry Register(object obj);
-        IDependencyInjectorEntry RegisterOrReplace<T>(object Key = null);
+        IDependencyInjectorEntry Replace<T, U>();
+        bool IsRegistered<T>();
         T Resolve<T>(object Key = null);
         object Resolve(Type t, object Key = null);
         List<T> ResolveAll<T>(DependencyInjectorEntryType type = DependencyInjectorEntryType.NONE);

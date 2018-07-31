@@ -6,13 +6,14 @@ namespace Caspara.TestConsole
     {
         static void Main(string[] args)
         {
-            Caspara.Core.Application.Load(@"C:\Caspara\Repositories.xml");
-            Caspara.Core.Application.Start();
+            Caspara.UseConfiguration<TestConfigurationClass>();
+            Caspara.LoadConfiguration(@"C:\Caspara\Repositories.xml");
 
+            Caspara.Start();
             Console.WriteLine("Application Started");
             Console.ReadLine();
 
-            Caspara.Core.Application.Stop();
+            Caspara.Stop();
             Console.WriteLine("Application Ended");
             Console.ReadLine();
 

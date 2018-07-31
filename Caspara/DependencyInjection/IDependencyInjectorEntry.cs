@@ -8,6 +8,8 @@ namespace Caspara.DependencyInjection
     {
         List<Type> GetRegisteredTypes();
         bool IsRegisteredAs(Type t);
+        Type ResolveAsType { get; }
+        void ReplaceResolveType(Type t);
         List<object> GetKeys();
         bool HasKey(object Key);
         bool IsEntryType(DependencyInjectorEntryType type);
