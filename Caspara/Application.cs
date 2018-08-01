@@ -6,6 +6,7 @@ using Caspara.Serializing;
 using Caspara.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Caspara
 {
@@ -18,8 +19,10 @@ namespace Caspara
             this.ConfigurationClasses = ConfigurationClasses;
         }
 
-        public void Configure(string Path = null)
+        public void Configure(string BasePath = null)
         {
+            
+
             foreach (var c in ConfigurationClasses)
                 c.Configure(this);
 
@@ -42,10 +45,14 @@ namespace Caspara
                 InjectorService.Register<RepositoryPersistanceService>().As<IRepositoryPersistanceService>().AsSingleton();
 
             var extensionManager = InjectorService.Resolve<IExtensionManager>();
+
             extensionManager.LocateExtensions();
+            if (BasePath == null)
+                BasePath = extensionManager.GetApplicationPath();
+
 
             var persistanceService = InjectorService.Resolve<IRepositoryPersistanceService>();
-            persistanceService.Load<RepositoryCollection>(Path);
+            persistanceService.Load<RepositoryCollection>(Path.Combine(BasePath, "Repositories.xml"));
 
             extensionManager.LoadExtensions(this);
         }

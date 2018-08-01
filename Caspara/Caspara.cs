@@ -13,9 +13,9 @@ namespace Caspara
             ConfigurationClasses.Add(Activator.CreateInstance<T>());
         }
 
-        public static IApplication Application;
+        private static IApplication Application;
 
-        public static void LoadConfiguration(String Path)
+        public static void LoadConfiguration(String Path = null)
         {
             Application = new Application(ConfigurationClasses);
             Application.Configure(Path);

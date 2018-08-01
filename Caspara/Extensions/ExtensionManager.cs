@@ -19,7 +19,7 @@ namespace Caspara.Extensions
 
         public string GetApplicationPath()
         {
-            throw new NotImplementedException();
+            return _applicationPath;
         }
 
         public IExtension GetExtension(string Name)
