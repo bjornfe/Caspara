@@ -1,6 +1,8 @@
-﻿using Caspara.DependencyInjection;
+﻿using Caspara.Configurations;
+using Caspara.DependencyInjection;
 using Caspara.Extensions;
 using Caspara.Logging;
+using Caspara.Persistance;
 using Caspara.Repositories;
 using Caspara.Serializing;
 using Caspara.Services;
@@ -13,6 +15,9 @@ namespace Caspara
     public class Application : IApplication
     {
         public IDependencyInjectorService InjectorService { get; set; } = new DependencyInjectorService();
+
+        public string ApplicationPath { get; private set; }
+
         private List<IConfigurationClass> ConfigurationClasses;
         public Application(List<IConfigurationClass> ConfigurationClasses)
         {
@@ -21,7 +26,15 @@ namespace Caspara
 
         public void Configure(string BasePath = null)
         {
-            
+            Console.WriteLine("#################################################################################################");
+            var lines = File.ReadAllLines("Title.txt");
+            foreach (var l in lines)
+                Console.WriteLine(l);
+            Console.WriteLine("#################################################################################################");          
+            Console.WriteLine("Platform Type: " + Environment.OSVersion.Platform.ToString());
+            Console.WriteLine("OS Version: " + Environment.OSVersion.VersionString);
+            Console.WriteLine("64-Bit: " + Environment.Is64BitProcess);
+            Console.WriteLine("#################################################################################################");
 
             foreach (var c in ConfigurationClasses)
                 c.Configure(this);
@@ -41,8 +54,8 @@ namespace Caspara
             if (!InjectorService.IsRegistered<ISerializerService>())
                 InjectorService.Register<LocalSerializerService>().As<ISerializerService>().AsSingleton();
 
-            if(!InjectorService.IsRegistered<IRepositoryPersistanceService>())
-                InjectorService.Register<RepositoryPersistanceService>().As<IRepositoryPersistanceService>().AsSingleton();
+            if(!InjectorService.IsRegistered<IPersistanceService>())
+                InjectorService.Register<PersistanceService>().As<IPersistanceService>().AsSingleton();
 
             var extensionManager = InjectorService.Resolve<IExtensionManager>();
 
@@ -50,9 +63,10 @@ namespace Caspara
             if (BasePath == null)
                 BasePath = extensionManager.GetApplicationPath();
 
+            ApplicationPath = extensionManager.GetApplicationPath();
 
-            var persistanceService = InjectorService.Resolve<IRepositoryPersistanceService>();
-            persistanceService.Load<RepositoryCollection>(Path.Combine(BasePath, "Repositories.xml"));
+            var persistanceService = InjectorService.Resolve<IPersistanceService>();
+            persistanceService.Load<PersistanceModel>(Path.Combine(BasePath, "PersistanceModel.xml"));
 
             extensionManager.LoadExtensions(this);
         }
@@ -78,7 +92,7 @@ namespace Caspara
             var serviceManager = InjectorService.Resolve<IServiceManager>();
             serviceManager.StopServices();
 
-            var persistanceService = InjectorService.Resolve<IRepositoryPersistanceService>();
+            var persistanceService = InjectorService.Resolve<IPersistanceService>();
             persistanceService.Save();
 
 

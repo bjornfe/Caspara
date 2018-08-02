@@ -72,7 +72,6 @@ namespace Caspara.Extensions
             {
                 if (Path.GetFileName(file).Contains("Caspara"))
                 {
-                    Console.WriteLine("Evaluating File: " + file);
                     try
                     {
                         assemblyName = AssemblyName.GetAssemblyName(file);

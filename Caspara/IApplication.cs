@@ -10,6 +10,7 @@ namespace Caspara
 {
     public interface IApplication
     {
+        string ApplicationPath { get; }
         IDependencyInjectorService InjectorService { get; set; }
         void Configure(String Path = null);
         void Start();

@@ -1,4 +1,5 @@
-﻿using Caspara.DependencyInjection;
+﻿using Caspara.Configurations;
+using Caspara.DependencyInjection;
 using Caspara.Extensions;
 using System;
 using System.Collections.Generic;
@@ -7,8 +8,10 @@ namespace Caspara
 {
     public static class Caspara
     {
+        public static string DeviceName = "TestDevice";
+
         private static List<IConfigurationClass> ConfigurationClasses = new List<IConfigurationClass>();
-        public static void UseConfiguration<T>() where T : IConfigurationClass
+        public static void IncludeConfiguration<T>() where T : IConfigurationClass
         {
             ConfigurationClasses.Add(Activator.CreateInstance<T>());
         }

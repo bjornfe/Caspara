@@ -9,9 +9,9 @@ namespace Caspara
     public abstract class ObjectBase : IObject
     {
         [DataMember]
-        public object ID { get; set; }
+        public object ID { get; set; } = Guid.NewGuid();
 
         [DataMember]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
     }
 }

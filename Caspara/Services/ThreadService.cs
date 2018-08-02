@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using Caspara.Persistance;
 
 namespace Caspara.Services
 {
     public abstract class ThreadService : Service, IThreadService
     {
-        public int SleepInterval { get; set; } = 100;
+        public virtual int SleepInterval { get; set; } = 100;
         protected Thread ExecutionThread { get; set; }
         public Boolean Active { get; set; }
         public Double ExecutionTime { get; set; } = 0;
@@ -49,6 +50,12 @@ namespace Caspara.Services
         }
    
         private DateTime LastRun = DateTime.Now;
+
+        //public ThreadService(IPersistanceModel PersistanceModel) : base(PersistanceModel)
+        //{
+
+        //}
+
         private void ExecuteMethod()
         {
             IsRunning = true;
