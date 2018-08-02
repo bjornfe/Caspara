@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Caspara.ObservationMessageClient\Caspara.ObservationMessage.Client.csproj" />
+    <ProjectReference Include="..\Caspara.ObservationMessage.Client\Caspara.ObservationMessage.Client.csproj" />
     <ProjectReference Include="..\Caspara.ZeroMQ\Caspara.ZeroMQ.csproj" />
     <ProjectReference Include="..\Caspara\Caspara.csproj" />
   </ItemGroup>

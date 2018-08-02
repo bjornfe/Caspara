@@ -18,7 +18,7 @@ namespace Caspara.ObservationMessage.Client
         IMessageClient Client;
         ConfigurationSet ConfigurationSet;
 
-        public event EventHandler<ObservationMessage> MessageReceived;
+        public event EventHandler<Observations.ObservationMessage> MessageReceived;
 
         public ObservationMessageClient(IPersistanceModel PersistanceModel, IMessageClient Client)
         {
@@ -40,7 +40,7 @@ namespace Caspara.ObservationMessage.Client
 
         private void Subscriber_MessageReceived(object sender, string e)
         {
-            ObservationMessage om = JsonConvert.DeserializeObject<ObservationMessage>(e);
+            Observations.ObservationMessage om = JsonConvert.DeserializeObject<Observations.ObservationMessage>(e);
             if (om != null)
                 MessageReceived?.Invoke(this, om);
         }
@@ -64,7 +64,7 @@ namespace Caspara.ObservationMessage.Client
             Client.Unsubscribe(Topic);
         }
 
-        public void Publish(ObservationMessage Message)
+        public void Publish(Observations.ObservationMessage Message)
         {
             var msg = JsonConvert.SerializeObject(Message);
             Client.Publish(Message.Topic, msg);
@@ -72,7 +72,7 @@ namespace Caspara.ObservationMessage.Client
 
         public void Publish(Observation Observation)
         {
-            var message = new ObservationMessage()
+            var message = new Observations.ObservationMessage()
             {
                 Sender = Caspara.DeviceName,
                 Topic = Caspara.DeviceName + ".OBSERVATION." + Observation.ID,

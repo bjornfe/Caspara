@@ -9,7 +9,7 @@ namespace Caspara.MessageServer.Application
     {
         public void Configure(IApplication app)
         {
-            app.UseMessageServer();
+            app.IncludeMessageServer();
         }
 
         public void Start(IApplication app)
