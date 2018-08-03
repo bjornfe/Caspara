@@ -1,4 +1,5 @@
-﻿using Caspara.Configurations;
+﻿using Caspara;
+using Caspara.ConfigurationSets;
 using Caspara.Repositories;
 using System;
 using System.Collections.Generic;

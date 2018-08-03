@@ -1,14 +1,15 @@
-﻿using Caspara.Configurations;
+﻿using Caspara;
 using Caspara.DependencyInjection;
 using Caspara.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Caspara
 {
     public static class Caspara
     {
-        public static string DeviceName = "TestDevice";
+        public static string DeviceName = Dns.GetHostName();
 
         private static List<IConfigurationClass> ConfigurationClasses = new List<IConfigurationClass>();
         public static void IncludeConfiguration<T>() where T : IConfigurationClass

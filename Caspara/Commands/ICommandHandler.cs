@@ -6,6 +6,7 @@ namespace Caspara.Commands
 {
     public interface ICommandHandler
     {
-        ICommandResult Execute(ICommand command);
+        object CommandID { get; }
+        CommandResult Execute(Command command);
     }
 }

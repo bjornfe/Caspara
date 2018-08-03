@@ -1,4 +1,4 @@
-﻿using Caspara.Configurations;
+﻿using Caspara;
 using Caspara.DependencyInjection;
 using Caspara.Extensions;
 using Caspara.Logging;

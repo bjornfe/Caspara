@@ -1,4 +1,4 @@
-﻿using Caspara.Configurations;
+﻿using Caspara;
 using Caspara.Persistance;
 using System;
 using System.Collections.Generic;
