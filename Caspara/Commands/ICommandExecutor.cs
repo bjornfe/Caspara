@@ -6,6 +6,7 @@ namespace Caspara.Commands
 {
     public interface ICommandExecutor
     {
-        CommandResult Execute();
+        object CommandID { get; }
+        CommandResult Execute(String OverrideTarget = null, int OverridePort = 0);
     }
 }

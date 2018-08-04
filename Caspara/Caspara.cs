@@ -19,6 +19,14 @@ namespace Caspara
 
         private static IApplication Application;
 
+        public static IDependencyInjectorService GetDependencyInjector()
+        {
+            if (Application != null)
+                return Application.InjectorService;
+
+            return null;
+        }
+
         public static void LoadConfiguration(String Path = null)
         {
             Application = new Application(ConfigurationClasses);

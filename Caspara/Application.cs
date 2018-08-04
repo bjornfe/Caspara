@@ -30,7 +30,8 @@ namespace Caspara
             var lines = File.ReadAllLines("Title.txt");
             foreach (var l in lines)
                 Console.WriteLine(l);
-            Console.WriteLine("#################################################################################################");          
+            Console.WriteLine("#################################################################################################");
+            Console.WriteLine("Device Name: " + Caspara.DeviceName);
             Console.WriteLine("Platform Type: " + Environment.OSVersion.Platform.ToString());
             Console.WriteLine("OS Version: " + Environment.OSVersion.VersionString);
             Console.WriteLine("64-Bit: " + Environment.Is64BitProcess);

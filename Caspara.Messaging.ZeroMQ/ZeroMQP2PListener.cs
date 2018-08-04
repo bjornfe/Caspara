@@ -9,21 +9,18 @@ namespace Caspara.Messaging.ZeroMQ
 {
     public class ZeroMQP2PListener : IMessageP2PListener
     {
-        ZContext Context;
+        ZeroMQContext Context;
         ZSocket Listener;
 
         bool Active = true;
         bool Running = false;
 
+        Thread runningThread;
+
         public ZeroMQP2PListener()
         {
-            Context = new ZContext();
-
-            Listener = new ZSocket(Context, ZSocketType.REP);
-
-            Z85.CurveKeypair(out byte[] publicSubscribeKey, out byte[] privateSubscribeKey);
-            Listener.CurvePublicKey = ZeroMQConstants.GetServerPublicKey();
-            Listener.CurveSecretKey = ZeroMQConstants.GetServerPrivateKey();
+            Context = new ZeroMQContext();
+            Listener = Context.CreateServerSocket(ZSocketType.REP);
         }
 
         public int ListenPort { get; set; }
@@ -38,49 +35,58 @@ namespace Caspara.Messaging.ZeroMQ
                 Console.WriteLine($"Connection error: {connectError.Name} - {connectError.Number} - {connectError.Text}");
             }
 
-            new Thread(new ThreadStart(() =>
+            runningThread = new Thread(new ThreadStart(() =>
             {
                 Running = true;
                 while (Active)
                 {
                     try
                     {
-                        using (ZMessage message = Listener.ReceiveMessage(ZSocketFlags.DontWait))
+                        var message = Listener.ReceiveMessage(out var error);
+                        if (error == null)
                         {
-                            if(message != null)
+                            if (message != null && message.Count > 0)
                             {
-                                var responseMessage = HandleMessage?.Invoke(message[0].ReadString());
-                                using(ZMessage reponse = new ZMessage())
+                                try
                                 {
-                                    reponse.Add(new ZFrame(responseMessage));
-                                    Listener.Send(reponse);
-                                } 
-                            }
-                            else
-                            {
-                                Thread.Sleep(10);
+                                    if (HandleMessage != null)
+                                    {
+                                        var responseMessage = HandleMessage?.Invoke(message[0].ReadString());
+                                        using (ZMessage reponse = new ZMessage())
+                                        {
+                                            reponse.Add(new ZFrame(responseMessage));
+                                            Listener.Send(reponse);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("ZeroMQP2PListener: MessageHandler not defined");
+                                    }
+                                }
+                                catch(Exception err)
+                                {
+                                    Console.WriteLine("Failed to Receive P2P Message -> " + err.ToString());
+                                }
                             }
                         }
                     }
-                    catch
+                    catch(Exception err)
                     {
-
+                        Console.WriteLine("MessageListener failed -> " + err.ToString());
                     }
+
+                    Thread.Sleep(10);
                 }
                 Running = false;
-            })).Start();
+            }));
+            runningThread.Start();
         }
 
         public void Stop()
         {
             Active = false;
-            while (Running)
-                Thread.Sleep(10);
-
-            Listener.Close();
-            Listener.Dispose();
             Context.Dispose();
-
+            runningThread.Join();
         }
     }
 }

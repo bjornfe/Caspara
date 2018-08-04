@@ -23,7 +23,7 @@ namespace Caspara.Commands
         public CommandResult(bool Success, object ResultValue)
         {
             this.Success = Success;
-            Result.SetValue(ResultValue);
+            Result = new Value(ResultValue);
         }
     }
 }

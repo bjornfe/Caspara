@@ -25,7 +25,7 @@ namespace Caspara.Commands
             if (cmd != null && cmd.Command != null)
             {
                 respondTo = cmd.RespondTo;
-                var handler = InjectorService.Resolve<ICommandHandler>(cmd.Command.ID);
+                var handler = InjectorService.Resolve<ICommandHandler>(cmd.Command.CommandID);
                 if (handler != null)
                 {
                     result = handler.Execute(cmd.Command);

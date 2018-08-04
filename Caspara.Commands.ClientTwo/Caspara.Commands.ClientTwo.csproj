@@ -6,12 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Caspara.Messaging.ZeroMQ\Caspara.Messaging.ZeroMQ.csproj" />
     <ProjectReference Include="..\Caspara\Caspara.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="CommandHandlers\" />
   </ItemGroup>
 
 </Project>

@@ -11,7 +11,7 @@ namespace Caspara.Messaging.ZeroMQ
 {
     public class ZeroMQClient : IMessagePublishClient, IDisposable
     {
-        ZContext context;
+        ZeroMQContext context;
         ZSocket subscriber;
         ZSocket publisher;
 
@@ -26,20 +26,9 @@ namespace Caspara.Messaging.ZeroMQ
 
         public ZeroMQClient()
         {
-            context = new ZContext();
-
-            subscriber = new ZSocket(context, ZSocketType.SUB);
-            publisher = new ZSocket(context, ZSocketType.PUB);
-
-            Z85.CurveKeypair(out byte[] publicSubscribeKey, out byte[] privateSubscribeKey);
-            subscriber.CurvePublicKey = publicSubscribeKey;
-            subscriber.CurveSecretKey = privateSubscribeKey;
-            subscriber.CurveServerKey = ZeroMQConstants.GetServerPublicKey();
-
-            Z85.CurveKeypair(out byte[] publicPublishKey, out byte[] privatePublishKey);
-            publisher.CurvePublicKey = publicPublishKey;
-            publisher.CurveSecretKey = privatePublishKey;
-            publisher.CurveServerKey = ZeroMQConstants.GetServerPublicKey();
+            context = new ZeroMQContext();
+            subscriber = context.CreateClientSocket(ZSocketType.SUB);
+            publisher = context.CreateClientSocket(ZSocketType.PUB);
         }
 
         public IMessagePublishClient Start()
@@ -79,11 +68,18 @@ namespace Caspara.Messaging.ZeroMQ
                 {
                     try
                     {
-                        using (ZMessage message = subscriber.ReceiveMessage())
+                        using (ZMessage message = subscriber.ReceiveMessage(out var error))
                         {
-                            var topic = message[0].ReadString();
-                            var msg = message[1].ReadString();
-                            MessageReceived?.Invoke(topic, msg);
+                            if (message != null)
+                            {
+                                var topic = message[0].ReadString();
+                                var msg = message[1].ReadString();
+                                MessageReceived?.Invoke(topic, msg);
+                            }
+                            else
+                            {
+                                Thread.Sleep(10);
+                            }
                         }
                     }
                     catch
@@ -105,14 +101,10 @@ namespace Caspara.Messaging.ZeroMQ
             try
             {
                 Active = false;
-
-                subscriber.Close();
-                publisher.Close();
-
-                subscriber.Dispose();
-                publisher.Dispose();
+                
 
                 context.Dispose();
+
             }
             catch
             {

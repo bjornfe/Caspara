@@ -11,7 +11,7 @@ namespace Caspara.Messaging.ZeroMQ
 {
     public class ZeroMQServer : IMessagePublishServer, IDisposable
     {
-        ZContext context;
+        ZeroMQContext context;
         ZSocket publisher;
         ZSocket subscriber;
         //PubSubDevice device;
@@ -22,7 +22,7 @@ namespace Caspara.Messaging.ZeroMQ
         private bool Active = true;
         private bool Running = false;
 
-        
+        Thread runningThread;
 
         public void Start()
         {
@@ -34,18 +34,10 @@ namespace Caspara.Messaging.ZeroMQ
                 this.PublishPort = ZeroMQConstants.ServerPublishPort;
 
 
-            context = new ZContext();
+            context = new ZeroMQContext();
 
-            publisher = new ZSocket(context, ZSocketType.PUB);
-            subscriber = new ZSocket(context, ZSocketType.SUB);
-
-            publisher.CurveServer = true;
-            publisher.CurvePublicKey = ZeroMQConstants.GetServerPublicKey();
-            publisher.CurveSecretKey = ZeroMQConstants.GetServerPrivateKey();
-
-            subscriber.CurveServer = true;
-            subscriber.CurvePublicKey = ZeroMQConstants.GetServerPublicKey();
-            subscriber.CurveSecretKey = ZeroMQConstants.GetServerPrivateKey();
+            publisher = context.CreateServerSocket(ZSocketType.PUB);
+            subscriber = context.CreateServerSocket(ZSocketType.SUB);
 
             var publisherString = "tcp://*:" + PublishPort;
             var subscriberString = "tcp://*:" + SubscribePort;
@@ -66,16 +58,24 @@ namespace Caspara.Messaging.ZeroMQ
             }
 
             subscriber.SubscribeAll();
-            new Thread(new ThreadStart(() =>
+            runningThread = new Thread(new ThreadStart(() =>
             {
                 Running = true;
                 while (Active)
                 {
                     try
                     {
-                        using (ZMessage message = subscriber.ReceiveMessage())
+                        using (ZMessage message = subscriber.ReceiveMessage(out var error))
                         {
-                            publisher.Send(message);
+                            
+                            if (error == null && message != null && message.Count > 0)
+                            {
+                                publisher.Send(message);
+                            }
+                            else
+                            {
+                                Thread.Sleep(1);
+                            }
                         }
                     }
                     catch
@@ -84,20 +84,15 @@ namespace Caspara.Messaging.ZeroMQ
                     }
                 }
                 Running = false;
-            })).Start();
+            }));
+            runningThread.Start();
         }
 
         public void Stop()
         {
             Active = false;
-
-            subscriber.Close();
-            publisher.Close();
-
-            subscriber.Dispose();
-            publisher.Dispose();
-
             context.Dispose();
+            runningThread.Join();
         }
 
         public void Dispose()

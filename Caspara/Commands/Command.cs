@@ -16,7 +16,7 @@ namespace Caspara.Commands
         [DataMember]
         public Dictionary<int, Value> Arguments { get; set; }
         [DataMember]
-        public int TimeOutSeconds { get; set; }
+        public int TimeOutSeconds { get; set; } = 10;
 
         public Command()
         {

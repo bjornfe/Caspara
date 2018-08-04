@@ -51,7 +51,7 @@ namespace Caspara.Extensions
                 e.Register(app);
 
                 _extensions.Add(e);
-                Console.WriteLine("Loaded Extension:" + e.Name);
+                Console.WriteLine("Loaded Extension: " + e.Name);
             }
         }
 
